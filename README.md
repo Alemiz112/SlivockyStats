@@ -15,8 +15,8 @@ makeplugin SlivockyStats
 
 ## Hot to configure plugin
 
-#Main Messages, Texts
-#Use \n to make new line, §c, §a, §b, §l... to make collors
+#Main Messages, Texts</br>
+#Use \n to make new line, §c, §a, §b, §l... to make collors</br>
 #Interval to show texts in SECONDS
 ```sh
 MainInterval: 25
@@ -43,8 +43,8 @@ BasicTexts:
   level: "world"
 ```
 
-#To enable type "true"
-#To disable "false"
+#To enable type "true"</br>
+#To disable "false"</br>
 #HungerGames
 ```sh
 HungerGames:
