@@ -80,4 +80,4 @@ Alemiz – [Discord](https://discord.gg/tJ9wDRR) – alemiz@mizerak.eu
 
 Distributed under the Apache license. See ``LICENSE`` for more information.
 
-[https://github.com/yourname/github-link](https://github.com/dbader/)
+[https://github.com/Alemiz112](https://github.com/Alemiz112/)
