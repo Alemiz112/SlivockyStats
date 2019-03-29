@@ -1,10 +1,5 @@
 # SlivockyStats
 > Create custom Stats and FloatingTexts for PM Server.
-
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Downloads Stats][npm-downloads]][npm-url]
-
 Support some Minigames. Planned to extend support soon!
 
 ![](header.png)
