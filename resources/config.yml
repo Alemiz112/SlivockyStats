@@ -1,0 +1,58 @@
+###############
+# Made by Alemiz
+# Show Stats from MiniGames
+###############
+
+#Main Messages, Texts
+#Use \n to make new line, §c, §a, §b, §l... to make collors
+#Interval to show texts in SECONDS
+MainInterval: 25
+AboutText:
+  enable: "true"
+  title: "SlivockyStats"
+  text: "§aHi everybody!"
+  x: 0
+  y: 0
+  z: 0
+  level: "world"
+BasicTexts:
+  enable: "true"
+  title1: "Text1"
+  text1: "§aGG!"
+  x1: 2
+  y1: 2
+  z1: 2
+  title2: "Text2"
+  text2: "§aHaloo!"
+  x2: 1
+  y2: 1
+  z2: 1
+  level: "world"
+
+#To enable type "true"
+#To disable "false"
+#HungerGames
+HungerGames:
+  enable: "false"
+  kills:
+    x: 160
+    y: 100
+    z: 160
+  wons:
+    x: 180
+    y: 100
+    z: 180
+  level: "world"
+
+#BuildUHC
+BuildUHC:
+  enable: "false"
+  kills:
+    x: 160
+    y: 100
+    z: 160
+  wons:
+    x: 180
+    y: 100
+    z: 180
+  level: "world"
