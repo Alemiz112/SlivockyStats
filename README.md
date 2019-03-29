@@ -6,7 +6,7 @@ Support some Minigames. Planned to extend support soon!
 
 ## Installation
 
-Only PocketMine:
+Only PocketMine:</br>
 On server must be installed DevTools to run it or compile!
 
 ```sh
