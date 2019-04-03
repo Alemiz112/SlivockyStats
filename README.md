@@ -8,12 +8,21 @@ Support some Minigames. Planned to extend support soon!
 
 Only PocketMine:
 On server must be installed DevTools to run it or compile!
-
 ```sh
 makeplugin SlivockyStats
 ```
+For Ranks must be ENABLED MySQL! Im working on YAML config...
+```sh
+MySql: true
+#MySql Parameters
+host: 0.0.0.0
+port: 3306
+user: root
+password: xxxxxx
+db: main_db
+```
 
-## Hot to configure plugin
+## How to configure plugin
 
 #Main Messages, Texts</br>
 #Use \n to make new line, §c, §a, §b, §l... to make collors</br>
@@ -45,7 +54,8 @@ BasicTexts:
 
 #To enable type "true"</br>
 #To disable "false"</br>
-#HungerGames
+#HungerGames by Alemiz
+#HungerGames by InfinityGamers soon...
 ```sh
 HungerGames:
   enable: "false"
@@ -65,6 +75,8 @@ _For more examples and usage, please write me [Discord][https://discord.gg/tJ9wD
 
 ## Release History
 
+* 1.3.0
+    * ADD: RankSystem
 * 1.0.2
     * ADD: Add BasicTexts
 * 1.0.0
