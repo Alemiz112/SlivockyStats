@@ -3,6 +3,7 @@
 namespace alemiz\SlivockyStats;
 
 
+use alemiz\SlivockyStats\provider\MySQL;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
@@ -31,6 +32,9 @@ class SlivockyStats extends PluginBase implements Listener{
     public $cfg;
 
     public $text;
+
+    public $provider;
+    public $rank;
     
     public function onEnable(){
 		$this->getLogger()->info("SlivockyStats has been enabled!");
@@ -48,6 +52,14 @@ class SlivockyStats extends PluginBase implements Listener{
         }
 
         $this->showTexts($this->cfg->get("MainInterval"));
+
+        if ($this->cfg->get("MySql") != "true"){
+            $this->getLogger()->critical("Please Enable MySql to use RANKS!");
+        } else{
+            $this->provider = new provider\MySql($this);
+            $this->provider->connect();
+            $this->rank = new  Ranks\Ranks($this);
+        }
     }
 
     public function onDisable() {
@@ -58,7 +70,7 @@ class SlivockyStats extends PluginBase implements Listener{
      * @param int $interval
      */
     public function showTexts($interval){
-        /* Define Texts locations */
+        /* Define Texts locations - not USED */
         $about = new Texts\About($this);
         $basic = new Texts\Basic($this);
 
@@ -71,4 +83,20 @@ class SlivockyStats extends PluginBase implements Listener{
             $this->getScheduler()->scheduleRepeatingTask(new Texts\Basic($this), $interval * 20);
         }
     }
+
+    /**
+     * @param PlayerJoinEvent $event
+     */
+    public function onJoin(PlayerJoinEvent $event){
+        $player = $event->getPlayer();
+        $name= $player->getName();
+
+        if ($this->cfg->get("MySql") == "true"){
+            if(!$this->provider->accountExists($name)){
+                $this->getLogger()->debug("Rank for '".$name."' is not found. Creating account...");
+                $this->provider->createAccount($name);
+            }
+        }
+    }
+
 }

@@ -3,6 +3,17 @@
 # Show Stats from MiniGames
 ###############
 
+#Database Connection Settings
+#Must be enabled to use RANKS
+#Using config SOON...
+MySql: false
+#MySql Parameters
+host: 0.0.0.0
+port: 3306
+user: root
+password: xxxxxx
+db: main_db
+
 #Main Messages, Texts
 #Use \n to make new line, §c, §a, §b, §l... to make collors
 #Interval to show texts in SECONDS
@@ -56,3 +67,12 @@ BuildUHC:
     y: 100
     z: 180
   level: "world"
+
+#Ranks, levels Config - VIP Feature
+Ranks:
+  Rank1: "Starter"
+  Rank2: "Friend"
+  Rank3: "Villager"
+  Rank4: "Gamer"
+  Rank5: "§eEpic"
+  Rank6: "§6God"
