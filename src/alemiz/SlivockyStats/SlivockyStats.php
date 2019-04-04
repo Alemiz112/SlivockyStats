@@ -37,8 +37,7 @@ class SlivockyStats extends PluginBase implements Listener{
     public $rank;
     
     public function onEnable(){
-		$this->getLogger()->info("SlivockyStats has been enabled!");
-		@mkdir($this->getDataFolder());
+        @mkdir($this->getDataFolder());
 		$this->saveDefaultConfig();
 		$this->cfg = $this->getConfig();
 
@@ -53,17 +52,11 @@ class SlivockyStats extends PluginBase implements Listener{
 
         $this->showTexts($this->cfg->get("MainInterval"));
 
-        if ($this->cfg->get("MySql") != "true"){
-            $this->getLogger()->critical("Please Enable MySql to use RANKS!");
-        } else{
+        if ($this->cfg->get("MySql") == "true"){
             $this->provider = new provider\MySql($this);
             $this->provider->connect();
             $this->rank = new  Ranks\Ranks($this);
         }
-    }
-
-    public function onDisable() {
-        $this->getLogger()->info("SlivockyStats has been disabled!");
     }
 
     /**

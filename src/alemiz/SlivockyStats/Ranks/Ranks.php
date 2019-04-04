@@ -46,7 +46,7 @@ class Ranks {
 
     public function checkRank($player, $xp){
         //$xp = $this->plugin->provider->getXP($player);
-        
+
         if ($xp > 0 && $xp <= 50) return "rank1";
         if ($xp > 50 && $xp <= 100) return "rank2";
         if ($xp > 100 && $xp <= 200) return "rank3";
