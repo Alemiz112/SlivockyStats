@@ -1,2 +1,4 @@
 
 *.xml
+.idea/SlivockyStats.iml
+*.iml

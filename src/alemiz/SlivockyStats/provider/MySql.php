@@ -1,6 +1,10 @@
 <?php
 namespace alemiz\SlivockyStats\provider;
 
+use pocketmine\Player;
+
+use onebone\economyapi\EconomyAPI;
+
 class MySql {
     private $plugin;
 
@@ -31,7 +35,14 @@ class MySql {
                 return;
             }
 
-        //} else echo "Please Enable MySql!";
+        $this->plugin->getScheduler()->scheduleRepeatingTask(new MySQLPing($this, $this->conn), 600);
+    }
+
+    /**
+     * Database Connection restart after fail
+     */
+    public function reconnect(){
+            $this->connect();
     }
 
     /**
@@ -92,6 +103,39 @@ class MySql {
         $newXP = $oldXP + $xp;
 
         $this->plugin->rank->rankUP($p, $oldXP, $newXP);
+
+    }
+
+    /**
+     * @param $player
+     * @param int $xp
+     */
+    public function killXP($player,int $xp){
+        $player = $player->getName();
+
+        $player = strtolower($player);
+        $amount = (float) $xp;
+        $this->conn->query("UPDATE user_xp SET xp = xp - $amount WHERE username='".$this->conn->real_escape_string($player)."'");
+    }
+
+    /**
+     * @param Player $player
+     * @param int $xp
+     */
+    public function changeXP(Player $player,int $xp){
+        $currency = $xp * $this->plugin->cfg->get("Currency"); //Set Currency of XP to $$
+
+        $money = $this->plugin->getServer()->getPluginManager()->getPlugin("EconomyAPI");
+
+        if ($this->getXP($player) >= $xp){
+            if ($money !== null){
+                $this->killXP($player, $xp);
+                EconomyAPI::getInstance()->addMoney($player, $currency);
+                $player->sendMessage("§bTransfer was sucesfull!");
+            }
+        }else{
+            $player->sendMessage("§cYou dont Have enough XP!");
+        }
 
     }
 

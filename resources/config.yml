@@ -68,6 +68,19 @@ BuildUHC:
     z: 180
   level: "world"
 
+#SkyWars
+SkyWars:
+  enable: "false"
+  kills:
+    x: 160
+    y: 100
+    z: 160
+  wons:
+    x: 180
+    y: 100
+    z: 180
+  level: "world"
+
 #Ranks, levels Config - VIP Feature
 Ranks:
   Rank1: "Starter"
@@ -76,3 +89,6 @@ Ranks:
   Rank4: "Gamer"
   Rank5: "§eEpic"
   Rank6: "§6God"
+#Set how mutch $ is XP
+#Only if is installed EconomyAPI
+Currency: 25

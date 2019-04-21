@@ -14,7 +14,7 @@ use pocketmine\utils\Config;
 
 use pocketmine\scheduler\Task as PluginTask;
 
-class BuildUHC extends PluginTask{
+class SkyWars extends PluginTask{
 
     private $plugin;
 
@@ -25,8 +25,8 @@ class BuildUHC extends PluginTask{
     public function __construct($plugin){
 
         $this->plugin = $plugin;
-        $kills = $plugin->cfg->get("BuildUHC")["kills"];
-        $wons = $plugin->cfg->get("BuildUHC")["wons"];
+        $kills = $plugin->cfg->get("SkyWars")["kills"];
+        $wons = $plugin->cfg->get("SkyWars")["wons"];
 
         $kx = $kills["x"];
         $ky = $kills["y"];
@@ -36,9 +36,9 @@ class BuildUHC extends PluginTask{
         $wy = $wons["y"];
         $wz = $wons["z"];
 
-        $this->kills = new FloatingTextParticle(new Vector3($kx, $ky,  $kz), "", "§e < §6Build§cUHC§7: §e> ");
+        $this->kills = new FloatingTextParticle(new Vector3($kx, $ky,  $kz), "", "§e < §bSky§aWars: §e> ");
 
-        $this->wons = new FloatingTextParticle(new Vector3($wx, $wy,  $wz), "", "§e < §6Build§cUHC§7: §e> ");
+        $this->wons = new FloatingTextParticle(new Vector3($wx, $wy,  $wz), "", "§e < §bSky§aWars: §e> ");
     }
 
     public function onRun($tick){
@@ -50,10 +50,10 @@ class BuildUHC extends PluginTask{
     }
 
     public function kills(){
-        $data = $this->plugin->getServer()->getPluginManager()->getPlugin('BuildUHC')->getData(0);
+        $data = $this->plugin->getServer()->getPluginManager()->getPlugin('SkyWars')->getData(0);
         arsort($data);
 
-        $world = $this->plugin->cfg->get("BuildUHC")["level"];
+        $world = $this->plugin->cfg->get("SkyWars")["level"];
 
         $this->kills->setText("§aName:        §eKills:");
         $pos = 1;
@@ -71,10 +71,10 @@ class BuildUHC extends PluginTask{
     }
 
     public function wons(){
-        $data = $this->plugin->getServer()->getPluginManager()->getPlugin('BuildUHC')->getData(1);
+        $data = $this->plugin->getServer()->getPluginManager()->getPlugin('SkyWars')->getData(1);
         arsort($data);
 
-        $world = $this->plugin->cfg->get("BuildUHC")["level"];
+        $world = $this->plugin->cfg->get("SkyWars")["level"];
 
         $this->wons->setText("§aName:        §eWons:");
         $pos = 1;

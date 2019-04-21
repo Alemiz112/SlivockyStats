@@ -4,7 +4,6 @@ namespace alemiz\SlivockyStats\Ranks;
 
 use pocketmine\utils\TextFormat;
 
-
 class Ranks {
     private $plugin;
 

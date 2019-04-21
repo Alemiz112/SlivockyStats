@@ -49,6 +49,9 @@ class SlivockyStats extends PluginBase implements Listener{
         if ($this->cfg->get("BuildUHC")["enable"] == "true"){
             $this->getScheduler()->scheduleRepeatingTask(new Minigames\BuildUHC($this), 4 * 20);
         }
+        if ($this->cfg->get("SkyWars")["enable"] == "true"){
+            $this->getScheduler()->scheduleRepeatingTask(new Minigames\SkyWars($this), 4 * 20);
+        }
 
         $this->showTexts($this->cfg->get("MainInterval"));
 

@@ -62,7 +62,7 @@ class HungerGames extends PluginTask{
 
             $text = $this->kills->getText();
 
-            $this->kills->setText($text."\n§6".$pos." §a" .$name. "   §7- §e". $kills);
+            $this->kills->setText($text."\n§6".$pos." §a" .$name. " §7- §e". $kills);
             $pos++;
         }
         $level = $this->plugin->getServer()->getLevelByName($world);
@@ -83,7 +83,7 @@ class HungerGames extends PluginTask{
 
             $text = $this->wons->getText();
 
-            $this->wons->setText($text."\n§6".$pos." §a" .$name. "   §7- §e". $wons);
+            $this->wons->setText($text."\n§6".$pos." §a" .$name. " §7- §e". $wons);
             $pos++;
         }
         $level = $this->plugin->getServer()->getLevelByName($world);
