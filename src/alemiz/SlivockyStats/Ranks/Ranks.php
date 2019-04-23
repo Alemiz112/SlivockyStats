@@ -2,56 +2,66 @@
 
 namespace alemiz\SlivockyStats\Ranks;
 
+use alemiz\SlivockyStats\SlivockyStats;
+use pocketmine\Player;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
 class Ranks {
     private $plugin;
 
-    public function __construct($plugin){
+    public function __construct(SlivockyStats $plugin){
         $this->plugin = $plugin;
     }
 
-    public function rankUP($player, $oldXP, $newXP){
-        $name = $player->getName();
-        $rank = $this->checkRank($player, $oldXP);
+    public function getRank(Player $player, int $function = 0, $xp = "new"){
+        $data = new Config($this->plugin->getDataFolder()."/ranks.yml", Config::YAML);
+        if ($xp === "new"){
+            $xp = $this->plugin->provider->getXP($player);
+        }
+        switch ($function){
+            case 0: //Returns RANK
+                foreach ($data->get("Ranks") as $cate => $ranks){
+                    $rank = explode(":", $ranks);
 
-        $rank1 = $this->plugin->cfg->get("Ranks")["Rank1"];
-        $rank2 = $this->plugin->cfg->get("Ranks")["Rank2"];
-        $rank3 = $this->plugin->cfg->get("Ranks")["Rank3"];
-        $rank4 = $this->plugin->cfg->get("Ranks")["Rank4"];
-        $rank5 = $this->plugin->cfg->get("Ranks")["Rank5"];
-        $rank6 = $this->plugin->cfg->get("Ranks")["Rank6"];
+                    if ($xp >= $rank[2] && $xp < $rank[3]){
+                        $prank = $rank[0];
+                    }
+                }
+                if (!isset($prank)) $prank = "§7Guest";
+                return $prank;
 
+                break;
+            case 1: //Return Ranks Nametag
+                foreach ($data->get("Ranks") as $cate => $ranks){
+                    $rank = explode(":", $ranks);
 
-        if ($oldXP == 0){
-            $player->addTitle("§aRank UP!", "#{$rank1} §d".$newXP."XP");
-        }
-        if ($rank == "rank1" && $newXP > 50){
-            $player->addTitle("§aRank UP!", "#{$rank2} §d".$newXP."XP");
-        }
-        if ($rank == "rank2" && $newXP > 100){
-            $player->addTitle("§aRank UP!", "#{$rank3} §d".$newXP."XP");
-        }
-        if ($rank == "rank3" && $newXP > 200){
-            $player->addTitle("§aRank UP!", "#{$rank4} §d".$newXP."XP");
-        }
-        if ($rank == "rank4" && $newXP > 350){
-            $player->addTitle("§aRank UP!", "#{$rank5} §d".$newXP."XP");
-        }
-        if ($rank == "rank5" && $newXP > 600){
-            $player->addTitle("§aRank UP!", "#{$rank6} §d".$newXP."XP");
+                    if ($xp >= $rank[2] && $xp < $rank[3]){
+                        $nametag = $rank[1];
+                    }
+                }
+                if (!isset($nametag)) $nametag = "§fGuest";
+                return $nametag;
+
+                break;
         }
     }
 
-    public function checkRank($player, $xp){
-        //$xp = $this->plugin->provider->getXP($player);
+    public function neededEx(Player $player){
+        $data = new Config($this->plugin->getDataFolder()."/ranks.yml", Config::YAML);
 
-        if ($xp > 0 && $xp <= 50) return "rank1";
-        if ($xp > 50 && $xp <= 100) return "rank2";
-        if ($xp > 100 && $xp <= 200) return "rank3";
-        if ($xp > 200 && $xp <= 350) return "rank4";
-        if ($xp > 350 && $xp <= 600) return "rank5";
-        if ($xp > 600) return "rank6";
+        $xp = $this->plugin->provider->getXP($player);
 
+        foreach ($data->get("Ranks") as $cate => $ranks){
+            $rank = explode(":", $ranks);
+
+            if ($xp >= $rank[2] && $xp < $rank[3]){
+                if (isset($rank[3])){
+                    return $rank[3] - $xp;
+                }else{
+                    return "No data";
+                }
+            }
+        }
     }
 }

@@ -101,9 +101,6 @@ class MySql {
         $this->conn->query("UPDATE user_xp SET xp = xp + $amount WHERE username='".$this->conn->real_escape_string($player)."'");
 
         $newXP = $oldXP + $xp;
-
-        $this->plugin->rank->rankUP($p, $oldXP, $newXP);
-
     }
 
     /**

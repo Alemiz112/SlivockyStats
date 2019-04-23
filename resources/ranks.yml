@@ -1,0 +1,33 @@
+#Settings of Ranks
+#Format:
+#Name:NameTag:minExperience:maxExperience
+#Example "Villager:§lVillager:20:50"
+
+Ranks:
+  - "Villager1:§6Villager§7 [§cI§7]:20:50"
+  - "Villager2:§6Villager§7 [§6II§7]:50:80"
+  - "Villager3:§6Villager§7 [§aIII§7]:80:140"
+  - "Slime1:§aSlime§7 [§cI§7]:140:190"
+  - "Slime2:§aSlime§7 [§6II§7]:190:210"
+  - "Slime3:§aSlime§7 [§aIII§7]:210:270"
+  - "Zombie1:§3Zombie§7 [§cI§7]:270:300"
+  - "Zombie2:§3Zombie§7 [§6II§7]:300:350"
+  - "Zombie3:§3Zombie§7 [§aIII§7]:350:400"
+  - "Evoker1:§fEvoker§7 [§cI§7]:400:450"
+  - "Evoker2:§fEvoker§7 [§6II§7]:450:470"
+  - "Evoker3:§fEvoker§7 [§aIII§7]:470:510"
+  - "Blaze1:§6Blaze§7 [§cI§7]:510:550"
+  - "Blaze2:§6Blaze§7 [§6II§7]:550:590"
+  - "Blaze3:§6Blaze§7 [§aIII§7]:590:620"
+  - "Creeper1:§aCreeper§7 [§cI§7]:620:650"
+  - "Creeper2:§aCreeper§7 [§6II§7]:650:700"
+  - "Creeper3:§aCreeper§7 [§aIII§7]:700:750"
+  - "Wither1:§8Wither§7 [§cI§7]:750:810"
+  - "Wither2:§8Wither§7 [§6II§7]:810:820"
+  - "Wither3:§8Wither§7 [§aIII§7]:820:900"
+  - "Dragon1:§dDragon§7 [§cI§7]:900:950"
+  - "Dragon2:§dDragon§7 [§6II§7]:950:980"
+  - "Dragon3:§dDragon§7 [§6III§7]:980:1080"
+  - "Dragon4:§dDragon§7 [§aIV§7]:1080:1200"
+  - "Dragon5:§dDragon§7 [§aV§7]:1200:1500"
+  - "Master:§cMASTER:1500:99999"

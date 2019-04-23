@@ -4,9 +4,13 @@ namespace alemiz\SlivockyStats;
 
 
 use alemiz\SlivockyStats\provider\MySQL;
+use alemiz\SlivockyStats\Ranks\Ranks;
+use alemiz\SlivockyStats\Ranks\RankTask;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
@@ -27,12 +31,19 @@ use pocketmine\scheduler\Task as PluginTask;
 use alemiz\SlivockyStats\Texts;
 use alemiz\SlivockyStats\Minigames;
 
+use _64FF00\PurePerms\PurePerms;
+
+
 class SlivockyStats extends PluginBase implements Listener{
-    
+    /**
+     * @var Config
+     */
     public $cfg;
 
     public $text;
-
+    /**
+     * @var MySql
+     */
     public $provider;
     public $rank;
     
@@ -40,6 +51,7 @@ class SlivockyStats extends PluginBase implements Listener{
         @mkdir($this->getDataFolder());
 		$this->saveDefaultConfig();
 		$this->cfg = $this->getConfig();
+		$this->saveResource("ranks.yml");
 
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
@@ -58,8 +70,17 @@ class SlivockyStats extends PluginBase implements Listener{
         if ($this->cfg->get("MySql") == "true"){
             $this->provider = new provider\MySql($this);
             $this->provider->connect();
-            $this->rank = new  Ranks\Ranks($this);
+            $this->getScheduler()->scheduleRepeatingTask(new RankTask($this), 1.5 * 20);
         }
+    }
+
+    /**
+     * @return Ranks|string
+     */
+    public function getRank(){
+        if ($this->cfg->get("MySql") == "true"){
+            return new Ranks($this);
+        }else return "Please Enable MYSQL";
     }
 
     /**
@@ -92,6 +113,69 @@ class SlivockyStats extends PluginBase implements Listener{
                 $this->getLogger()->debug("Rank for '".$name."' is not found. Creating account...");
                 $this->provider->createAccount($name);
             }
+            switch ($this->getPlayerGroup($player)){
+                case "VIP":
+                    $player->setNameTag("§e§lVIP §r{$player->getName()}");
+                    break;
+                case "EpicVIP":
+                    $player->setNameTag("§dEpicVIP §r{$player->getName()}");
+                    break;
+                default:
+                    $nameTag = $this->getRank()->getRank($player,1);
+                    $player->setNameTag("{$nameTag} §r{$player->getName()}");
+                    break;
+            }
+
+            if ($this->getPlayerGroup($player) != "VIP" or "EpicVIP"){
+                $nameTag = $this->getRank()->getRank($player,1);
+                $player->setNameTag("{$nameTag} §r{$player->getName()}");
+            }
+
+        }
+    }
+
+    public function onQuit(PlayerQuitEvent $event){
+        $player = $event->getPlayer();
+        if ($this->cfg->get("MySql") == "true"){
+            $player->setNameTag($player->getName());
+        }
+    }
+
+    public function onChat(PlayerChatEvent $event){
+        if ($this->cfg->get("MySql") == "true") {
+            $message = $event->getMessage();
+            $player = $event->getPlayer();
+
+            switch ($this->getPlayerGroup($player)){
+                case "VIP":
+                    $event->setFormat("§e§lVIP §r§b{$player->getName()} §e>§r {$message}");
+                    break;
+                case "EpicVIP":
+                    $event->setFormat("§dEpicVIP §r§b{$player->getName()} §e>§r {$message}");
+                    break;
+                default:
+                    $nameTag = $this->getRank()->getRank($player,1);
+                    $event->setFormat("{$nameTag} §r§b{$player->getName()} §e>§r {$message}");
+                    break;
+            }
+            /*if ($this->getPlayerGroup($player) != "VIP" or "EpicVIP") {
+                $nameTag = $this->getRank()->getRank($player, 1);
+                $event->setFormat("{$nameTag} §r§b{$player->getName()} §e>§r {$message}");
+            }*/
+        }
+    }
+
+    public function getPlayerGroup(Player $player): string{
+        $purePerms = $this->getServer()->getPluginManager()->getPlugin("PurePerms");
+        if($purePerms instanceof PurePerms){
+            $group = $purePerms->getUserDataMgr()->getData($player)['group'];
+            if($group !== null){
+                return $group;
+            }else{
+                return "No Rank";
+            }
+        }else{
+            return "Soon...";
         }
     }
 
