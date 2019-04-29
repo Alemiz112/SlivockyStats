@@ -1,6 +1,6 @@
 name: SlivockyStats
 main: alemiz\SlivockyStats\SlivockyStats
-version: 1.4.0
+version: 1.4.1
 api: 3.0.0
 author: Alemiz
 description: Show Stats from Minigames and More...

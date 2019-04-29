@@ -3,6 +3,8 @@
 namespace alemiz\SlivockyStats\Ranks;
 
 use alemiz\SlivockyStats\SlivockyStats;
+use pocketmine\item\enchantment\Enchantment;
+use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
@@ -63,5 +65,34 @@ class Ranks {
                 }
             }
         }
+    }
+
+    public function getRankEx($rank){
+        $data = new Config($this->plugin->getDataFolder()."/ranks.yml", Config::YAML);
+        $param = explode(":", $data->get("Ranks")[$rank]);
+
+        return $param["3"] - 1;
+    }
+
+    public function getAllRanks(){
+        $data = new Config($this->plugin->getDataFolder()."/ranks.yml", Config::YAML);
+        return $data->get("Ranks");
+    }
+
+    public function getARanks(Player $player){
+        $data = new Config($this->plugin->getDataFolder()."/ranks.yml", Config::YAML);
+        $xp = $this->plugin->provider->getXP($player);
+
+        $aranks = [];
+        foreach ($data->get("Ranks") as $cate => $ranks){
+            $param = explode(":", $ranks);
+            if ($param[3] <= $xp){
+                $aranks[] = $param[0];
+            }
+        }
+
+        $aranks[] = $this->getRank($player);
+
+        return $aranks;
     }
 }

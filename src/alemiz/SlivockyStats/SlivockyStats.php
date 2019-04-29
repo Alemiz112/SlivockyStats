@@ -113,24 +113,34 @@ class SlivockyStats extends PluginBase implements Listener{
                 $this->getLogger()->debug("Rank for '".$name."' is not found. Creating account...");
                 $this->provider->createAccount($name);
             }
+
             switch ($this->getPlayerGroup($player)){
+                case "Owner":
+                    $player->setNameTag("§7[§cOwner§7] §r{$player->getName()}");
+                    break;
+                case "Builder":
+                    $player->setNameTag("§7[§eBuilder§7] §r{$player->getName()}");
+                    break;
+                case "Admin":
+                    $player->setNameTag("§7[§3Admin§7] §r{$player->getName()}");
+                    break;
+                case "Helper":
+                    $player->setNameTag("§7[§9Helper§7] §r{$player->getName()}");
+                    break;
+                case "Youtuber":
+                    $player->setNameTag("§7[§4Y§fT§7] §r{$player->getName()}");
+                    break;
                 case "VIP":
-                    $player->setNameTag("§e§lVIP §r{$player->getName()}");
+                    $player->setNameTag("§7[§e§lVIP§7] §r{$player->getName()}");
                     break;
                 case "EpicVIP":
-                    $player->setNameTag("§dEpicVIP §r{$player->getName()}");
+                    $player->setNameTag("§7[§dEpicVIP§7] §r{$player->getName()}");
                     break;
                 default:
                     $nameTag = $this->getRank()->getRank($player,1);
                     $player->setNameTag("{$nameTag} §r{$player->getName()}");
                     break;
             }
-
-            if ($this->getPlayerGroup($player) != "VIP" or "EpicVIP"){
-                $nameTag = $this->getRank()->getRank($player,1);
-                $player->setNameTag("{$nameTag} §r{$player->getName()}");
-            }
-
         }
     }
 
@@ -147,21 +157,32 @@ class SlivockyStats extends PluginBase implements Listener{
             $player = $event->getPlayer();
 
             switch ($this->getPlayerGroup($player)){
+                case "Owner":
+                    $event->setFormat("§7[§cOwner§7] §r§b{$player->getName()} §e>§r {$message}");
+                    break;
+                case "Builder":
+                    $event->setFormat("§7[§eBuilder§7] §r§b{$player->getName()} §e>§r {$message}");
+                    break;
+                case "Admin":
+                    $event->setFormat("§7[§3Admin§7] §r§b{$player->getName()} §e>§r {$message}");
+                    break;
+                case "Helper":
+                    $event->setFormat("§7[§9Helper§7] §r§b{$player->getName()} §e>§r {$message}");
+                    break;
+                case "Youtuber":
+                    $event->setFormat("§7[§4Y§fT§7] §r§b{$player->getName()} §e>§r {$message}");
+                    break;
                 case "VIP":
-                    $event->setFormat("§e§lVIP §r§b{$player->getName()} §e>§r {$message}");
+                    $event->setFormat("§7[§e§lVIP§7] §r§b{$player->getName()} §e>§r {$message}");
                     break;
                 case "EpicVIP":
-                    $event->setFormat("§dEpicVIP §r§b{$player->getName()} §e>§r {$message}");
+                    $event->setFormat("§7[§dEpicVIP§7] §r§b{$player->getName()} §e>§r {$message}");
                     break;
                 default:
                     $nameTag = $this->getRank()->getRank($player,1);
                     $event->setFormat("{$nameTag} §r§b{$player->getName()} §e>§r {$message}");
                     break;
             }
-            /*if ($this->getPlayerGroup($player) != "VIP" or "EpicVIP") {
-                $nameTag = $this->getRank()->getRank($player, 1);
-                $event->setFormat("{$nameTag} §r§b{$player->getName()} §e>§r {$message}");
-            }*/
         }
     }
 
