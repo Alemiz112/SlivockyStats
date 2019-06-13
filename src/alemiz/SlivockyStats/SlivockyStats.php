@@ -4,6 +4,7 @@ namespace alemiz\SlivockyStats;
 
 
 use alemiz\SlivockyStats\provider\MySQL;
+use alemiz\SlivockyStats\Ranks\RankListener;
 use alemiz\SlivockyStats\Ranks\Ranks;
 use alemiz\SlivockyStats\Ranks\RankTask;
 use pocketmine\command\Command;
@@ -46,6 +47,9 @@ class SlivockyStats extends PluginBase implements Listener{
      */
     public $provider;
     public $rank;
+
+    /** @var null | array */
+    public $textParticles;
     
     public function onEnable(){
         @mkdir($this->getDataFolder());
@@ -54,6 +58,7 @@ class SlivockyStats extends PluginBase implements Listener{
 		$this->saveResource("ranks.yml");
 
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->getServer()->getPluginManager()->registerEvents(new RankListener($this), $this);
 
         if ($this->cfg->get("HungerGames")["enable"] == "true"){
             $this->getScheduler()->scheduleRepeatingTask(new Minigames\HungerGames($this), 4 * 20);
@@ -73,6 +78,39 @@ class SlivockyStats extends PluginBase implements Listener{
             $this->getScheduler()->scheduleRepeatingTask(new RankTask($this), 1.5 * 20);
         }
     }
+    //Begin of LISTENER
+
+    public function onJoin(PlayerJoinEvent $event){
+        $player = $event->getPlayer();
+
+        //Floating Text particles
+        $this->addParticles($player);
+    }
+    /**
+     * @param EntityLevelChangeEvent $event
+     */
+    public function onLevelChange(EntityLevelChangeEvent $event){
+        $targetLevel = $event->getTarget();
+
+        if (is_null($this->textParticles)) return;
+
+        foreach ($this->textParticles as $level => $particles){
+            /** @var FloatingTextParticle $particle */
+            foreach ($particles as $particle){
+                if ($targetLevel->getFolderName() == $level){
+                    $particle->setInvisible(false);
+                    $targetLevel->addParticle($particle, [$event->getEntity()]);
+                    echo "IN";
+                }else{
+                    $particle->setInvisible(true);
+                    $lev = $event->getOrigin();
+                    $lev->addParticle($particle, [$event->getEntity()]);
+                    echo "Out";
+                }
+            }
+        }
+    }
+
 
     /**
      * @return Ranks|string
@@ -94,97 +132,13 @@ class SlivockyStats extends PluginBase implements Listener{
         /* Launch Texts */
 
         if ($data = $this->cfg->get("AboutText")["enable"] === "true") {
-            $this->getScheduler()->scheduleRepeatingTask(new Texts\About($this), $interval * 20);
+            $about->aboutCreate();
         }
         if ($data = $this->cfg->get("BasicTexts")["enable"] === "true") {
-            $this->getScheduler()->scheduleRepeatingTask(new Texts\Basic($this), $interval * 20);
+            $basic->basicCreate();
         }
     }
 
-    /**
-     * @param PlayerJoinEvent $event
-     */
-    public function onJoin(PlayerJoinEvent $event){
-        $player = $event->getPlayer();
-        $name= $player->getName();
-
-        if ($this->cfg->get("MySql") == "true"){
-            if(!$this->provider->accountExists($name)){
-                $this->getLogger()->debug("Rank for '".$name."' is not found. Creating account...");
-                $this->provider->createAccount($name);
-            }
-
-            switch ($this->getPlayerGroup($player)){
-                case "Owner":
-                    $player->setNameTag("§7[§cOwner§7] §r{$player->getName()}");
-                    break;
-                case "Builder":
-                    $player->setNameTag("§7[§eBuilder§7] §r{$player->getName()}");
-                    break;
-                case "Admin":
-                    $player->setNameTag("§7[§3Admin§7] §r{$player->getName()}");
-                    break;
-                case "Helper":
-                    $player->setNameTag("§7[§9Helper§7] §r{$player->getName()}");
-                    break;
-                case "Youtuber":
-                    $player->setNameTag("§7[§4Y§fT§7] §r{$player->getName()}");
-                    break;
-                case "VIP":
-                    $player->setNameTag("§7[§e§lVIP§7] §r{$player->getName()}");
-                    break;
-                case "EpicVIP":
-                    $player->setNameTag("§7[§dEpicVIP§7] §r{$player->getName()}");
-                    break;
-                default:
-                    $nameTag = $this->getRank()->getRank($player,1);
-                    $player->setNameTag("{$nameTag} §r{$player->getName()}");
-                    break;
-            }
-        }
-    }
-
-    public function onQuit(PlayerQuitEvent $event){
-        $player = $event->getPlayer();
-        if ($this->cfg->get("MySql") == "true"){
-            $player->setNameTag($player->getName());
-        }
-    }
-
-    public function onChat(PlayerChatEvent $event){
-        if ($this->cfg->get("MySql") == "true") {
-            $message = $event->getMessage();
-            $player = $event->getPlayer();
-
-            switch ($this->getPlayerGroup($player)){
-                case "Owner":
-                    $event->setFormat("§7[§cOwner§7] §r§b{$player->getName()} §e>§r {$message}");
-                    break;
-                case "Builder":
-                    $event->setFormat("§7[§eBuilder§7] §r§b{$player->getName()} §e>§r {$message}");
-                    break;
-                case "Admin":
-                    $event->setFormat("§7[§3Admin§7] §r§b{$player->getName()} §e>§r {$message}");
-                    break;
-                case "Helper":
-                    $event->setFormat("§7[§9Helper§7] §r§b{$player->getName()} §e>§r {$message}");
-                    break;
-                case "Youtuber":
-                    $event->setFormat("§7[§4Y§fT§7] §r§b{$player->getName()} §e>§r {$message}");
-                    break;
-                case "VIP":
-                    $event->setFormat("§7[§e§lVIP§7] §r§b{$player->getName()} §e>§r {$message}");
-                    break;
-                case "EpicVIP":
-                    $event->setFormat("§7[§dEpicVIP§7] §r§b{$player->getName()} §e>§r {$message}");
-                    break;
-                default:
-                    $nameTag = $this->getRank()->getRank($player,1);
-                    $event->setFormat("{$nameTag} §r§b{$player->getName()} §e>§r {$message}");
-                    break;
-            }
-        }
-    }
 
     public function getPlayerGroup(Player $player): string{
         $purePerms = $this->getServer()->getPluginManager()->getPlugin("PurePerms");
@@ -197,6 +151,24 @@ class SlivockyStats extends PluginBase implements Listener{
             }
         }else{
             return "Soon...";
+        }
+    }
+
+    /**
+     * @param Player $player
+     */
+    public function addParticles(Player $player){
+        if (is_null($this->textParticles)) return;
+
+        foreach ($this->textParticles as $level){
+            foreach ($level as $particle){
+                if (!$particle instanceof FloatingTextParticle) continue;
+
+                foreach ($particle->encode() as $packet){
+                    $particle->setInvisible(false);
+                    $player->dataPacket($packet);
+                }
+            }
         }
     }
 

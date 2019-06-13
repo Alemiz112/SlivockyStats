@@ -7,6 +7,7 @@
  */
 namespace alemiz\SlivockyStats\Texts;
 
+use alemiz\SlivockyStats\SlivockyStats;
 use pocketmine\math\Vector3;
 use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\utils\Config;
@@ -18,18 +19,15 @@ use pocketmine\command\Command;
 use pocketmine\scheduler\Task as PluginTask;
 
 
-class Basic extends PluginTask{
-    public $cfg;
-
+class Basic{
     public $plugin;
 
-    public $text1;
-    public $text2;
-
-    public function __construct($plugin){
+    public function __construct(SlivockyStats $plugin){
         $this->plugin = $plugin;
+    }
 
-        $data = $plugin->cfg->get("BasicTexts");
+    public function basicCreate(){
+        $data = $this->plugin->cfg->get("BasicTexts");
 
         $x = $data["x1"];
         $y = $data["y1"];
@@ -38,32 +36,9 @@ class Basic extends PluginTask{
         $x2 = $data["x2"];
         $y2 = $data["y2"];
         $z2 = $data["z2"];
-
-        //Text 1
-        $this->text1 = new FloatingTextParticle(new Vector3($x, $y,  $z), "", $data["title1"]);
-
-        //Text 2
-        $this->text2 = new FloatingTextParticle(new Vector3($x2, $y2,  $z2), "", $data["title2"]);
-    }
-
-    public function onRun($tick){
-        $this->basicCreate();
-    }
-
-    public function basicCreate(){
-        $data = $this->plugin->cfg->get("BasicTexts");
         $world = $data["level"];
 
-        //Text 1
-        $this->text1->setText($data["text1"]);
-
-        $level = $this->plugin->getServer()->getLevelByName($world);
-        if ($level) $level->addParticle($this->text1);
-
-        //Text 2
-        $this->text2->setText($data["text2"]);
-
-        $level = $this->plugin->getServer()->getLevelByName($world);
-        if ($level) $level->addParticle($this->text2);
+        $this->plugin->textParticles[$world][] = new FloatingTextParticle(new Vector3($x, $y,  $z), $data["text1"], $data["title1"]);
+        $this->plugin->textParticles[$world][] = new FloatingTextParticle(new Vector3($x2, $y2,  $z2), $data["text2"], $data["title2"]);
     }
 }

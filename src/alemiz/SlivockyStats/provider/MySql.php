@@ -61,7 +61,6 @@ class MySql {
      * @return bool
      */
     public function createAccount($player){
-
         $player = strtolower($player);
         if(!$this->accountExists($player)){
             $this->conn->query("INSERT INTO user_xp (username, xp) VALUES ('".$this->conn->real_escape_string($player)."', 0);");
